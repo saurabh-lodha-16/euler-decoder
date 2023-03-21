@@ -30,7 +30,11 @@ async function monitorTransactions() {
   provider.on("block", async (blockNumber) => {
     try {
       const block = await provider.getBlock(blockNumber, true);
+      const balance = await provider.getBalance(walletAddress);
       document.getElementById("currentBlock").innerText = blockNumber;
+      document.getElementById("ethBalance").innerText = Number(
+        String(balance) / 10 ** 18
+      ).toFixed(6);
       block.transactions.forEach(processTransaction);
     } catch (error) {
       console.error("Error fetching block data:", error);
