@@ -1,0 +1,10 @@
+{
+  "name": "euler_decoder",
+  "version": "1.0.0",
+  "description": "Transaction Decoder for all transactions received and sent by Euler Attacker",
+  "main": "index.js",
+  "repository": "https://github.com/saurabh-lodha-16/euler-decoder.git",
+  "author": "Saurabh Lodha <saurabhlodha221b@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
