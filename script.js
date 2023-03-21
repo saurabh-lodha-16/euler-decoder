@@ -1,4 +1,4 @@
-const provider = new ethers.JsonRpcProvider(`https://eth.llamarpc.com`);
+const provider = new ethers.JsonRpcProvider(`https://ethereum.publicnode.com`);
 
 const walletAddress = "0xb66cd966670d962c227b3eaba30a872dbfb995db";
 // Function to decode input data as a UTF-8 string.
@@ -26,8 +26,8 @@ async function processTransaction(transactionHash) {
       const messageElement = document.createElement("div");
       messageElement.style.border = "1px solid";
       messageElement.classList.add("message");
-      messageElement.innerText = `Sender: ${transaction.from}\nReceiver: ${transaction.to}\nBlock Number: ${transaction.blockNumber}\nMessage:\n ${decodedData}\n`;
-      document.getElementById("messages").appendChild(messageElement);
+      messageElement.innerText = `Sender: ${transaction.from}\nReceiver: ${transaction.to}\nBlock Number: ${transaction.blockNumber}\nTransaction Hash: ${transaction.hash}\nMessage:\n ${decodedData}\n`;
+      document.getElementById("messages").prepend(messageElement);
     }
   }
 }
