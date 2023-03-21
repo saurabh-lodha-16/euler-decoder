@@ -2,9 +2,9 @@ const provider = new ethers.JsonRpcProvider(`https://eth.llamarpc.com`);
 
 const walletAddress = "0xb66cd966670d962c227b3eaba30a872dbfb995db";
 // Function to decode input data as a UTF-8 string.
-function decodeInputData(inputData) {
+function decodeTransactionData(inputData) {
   try {
-    return ethers.utils.toUtf8String(inputData);
+    return ethers.toUtf8String(inputData);
   } catch (error) {
     console.error("Error decoding input data:", error);
     return null;
@@ -12,15 +12,21 @@ function decodeInputData(inputData) {
 }
 
 // Function to process a transaction.
-async function processTransaction(transaction) {
-  if (transaction.to === walletAddress || transaction.from === walletAddress) {
-    const inputData = transaction.input;
-    const decodedData = decodeInputData(inputData);
+async function processTransaction(transactionHash) {
+  const transaction = await provider.getTransaction(transactionHash);
+  if (
+    transaction.from.toLocaleLowerCase() ===
+      walletAddress.toLocaleLowerCase() ||
+    (transaction.to &&
+      transaction.to.toLocaleLowerCase() === walletAddress.toLocaleLowerCase())
+  ) {
+    const decodedData = decodeTransactionData(transaction.data);
 
     if (decodedData) {
       const messageElement = document.createElement("div");
+      messageElement.style.border = "1px solid";
       messageElement.classList.add("message");
-      messageElement.innerText = `Sender: ${transaction.from}\nReceiver: ${transaction.to}\nMessage: ${decodedData}`;
+      messageElement.innerText = `Sender: ${transaction.from}\nReceiver: ${transaction.to}\nBlock Number: ${transaction.blockNumber}\nMessage:\n ${decodedData}\n`;
       document.getElementById("messages").appendChild(messageElement);
     }
   }
@@ -29,7 +35,7 @@ async function processTransaction(transaction) {
 async function monitorTransactions() {
   provider.on("block", async (blockNumber) => {
     try {
-      const block = await provider.getBlock(blockNumber, true);
+      const block = await provider.getBlock(blockNumber);
       const balance = await provider.getBalance(walletAddress);
       document.getElementById("currentBlock").innerText = blockNumber;
       document.getElementById("ethBalance").innerText = Number(
